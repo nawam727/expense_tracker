@@ -1,6 +1,8 @@
+import 'package:expense_tracker/datetime/date_time_helper.dart';
 import 'package:expense_tracker/models/expense_item.dart';
+import 'package:flutter/material.dart';
 
-class ExpenseData {
+class ExpenseData extends ChangeNotifier {
   // All expense list
   List<ExpenseItem> overallExpenseList = [];
 
@@ -12,11 +14,15 @@ class ExpenseData {
   //Add new expense
   void addNewExpense(ExpenseItem newExpense) {
     overallExpenseList.add(newExpense);
+
+    notifyListeners();
   }
 
   //Delete added expense
   void deleteExpense(ExpenseItem expense) {
     overallExpenseList.remove(expense);
+
+    notifyListeners();
   }
 
   //Get weekdays (mon, tue, ect) from a dateTime object
@@ -56,5 +62,26 @@ class ExpenseData {
     }
 
     return startOfWeek!;
+  }
+
+  Map<String, double> calculateDailyExpenseSummery() {
+    Map<String, double> dailyExpenseSummary = {
+      // Date (yyyymmdd) : amountTotalForDay
+    };
+
+    for (var expense in overallExpenseList) {
+      String date = convertDateTimeToString(expense.dateTime);
+      double amount = double.parse(expense.amount);
+
+      if (dailyExpenseSummary.containsKey(date)) {
+        double currentAmount = dailyExpenseSummary[date]!;
+        currentAmount += amount;
+        dailyExpenseSummary[date] = currentAmount;
+      } else {
+        dailyExpenseSummary.addAll({date: amount});
+      }
+    }
+
+    return dailyExpenseSummary;
   }
 }

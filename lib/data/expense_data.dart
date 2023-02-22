@@ -1,3 +1,4 @@
+import 'package:expense_tracker/data/hive_database.dart';
 import 'package:expense_tracker/datetime/date_time_helper.dart';
 import 'package:expense_tracker/models/expense_item.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,14 @@ class ExpenseData extends ChangeNotifier {
   //Get expense list here
   List<ExpenseItem> getAllExpenseList() {
     return overallExpenseList;
+  }
+
+  //prepare date to display
+  final db = HiveDataBase();
+  void prepreData() {
+    if (db.readData().isNotEmpty) {
+      overallExpenseList = db.readData();
+    }
   }
 
   //Add new expense

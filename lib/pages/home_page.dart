@@ -18,10 +18,12 @@ class _HomePageState extends State<HomePage> {
   final newExpenseNameController = TextEditingController();
   final newExpenseRupeeController = TextEditingController();
   final newExpenseCentController = TextEditingController();
-  
+
   @override
-  Void initState() {
-    
+  void initState() {
+    super.initState();
+
+    Provider.of<ExpenseData>(context, listen: false).prepreData();
   }
 
   void addNewExpense() {
@@ -33,8 +35,8 @@ class _HomePageState extends State<HomePage> {
                 TextField(
                   controller: newExpenseNameController,
                   decoration: const InputDecoration(
-                          hintText: "Expense Name",
-                        ),
+                    hintText: "Expense Name",
+                  ),
                 ),
                 Row(
                   children: [

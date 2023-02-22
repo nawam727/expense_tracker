@@ -12,21 +12,58 @@ class ExpenseSummary extends StatelessWidget {
     required this.startOfWeek,
   });
 
+  //calculate max amount in bar graph
+  double calculateMax(
+    ExpenseData value,
+    String monday,
+    String tuesday,
+    String wednesday,
+    String thursday,
+    String friday,
+    String saturday,
+    String sunday,
+  ) {
+    double? max = 100;
+
+    List<double> values = [
+      value.calculateDailyExpenseSummery()[monday] ?? 0,
+      value.calculateDailyExpenseSummery()[tuesday] ?? 0,
+      value.calculateDailyExpenseSummery()[wednesday] ?? 0,
+      value.calculateDailyExpenseSummery()[thursday] ?? 0,
+      value.calculateDailyExpenseSummery()[friday] ?? 0,
+      value.calculateDailyExpenseSummery()[saturday] ?? 0,
+      value.calculateDailyExpenseSummery()[sunday] ?? 0,
+    ];
+
+    //sort from smallest to largest
+    values.sort();
+    max = values.last * 1.1;
+
+    return max == 0? 100 : max;
+  }
+
   @override
   Widget build(BuildContext context) {
     // get yyyymmdd for each day of this week
-    String monday = convertDateTimeToString(startOfWeek.add(const Duration(days: 0)));
-    String tuesday = convertDateTimeToString(startOfWeek.add(const Duration(days: 1)));
-    String wednesday = convertDateTimeToString(startOfWeek.add(const Duration(days: 2)));
-    String thursday = convertDateTimeToString(startOfWeek.add(const Duration(days: 3)));
-    String friday = convertDateTimeToString(startOfWeek.add(const Duration(days: 4)));
-    String saturday = convertDateTimeToString(startOfWeek.add(const Duration(days: 5)));
-    String sunday = convertDateTimeToString(startOfWeek.add(const Duration(days: 6)));
+    String monday =
+        convertDateTimeToString(startOfWeek.add(const Duration(days: 0)));
+    String tuesday =
+        convertDateTimeToString(startOfWeek.add(const Duration(days: 1)));
+    String wednesday =
+        convertDateTimeToString(startOfWeek.add(const Duration(days: 2)));
+    String thursday =
+        convertDateTimeToString(startOfWeek.add(const Duration(days: 3)));
+    String friday =
+        convertDateTimeToString(startOfWeek.add(const Duration(days: 4)));
+    String saturday =
+        convertDateTimeToString(startOfWeek.add(const Duration(days: 5)));
+    String sunday =
+        convertDateTimeToString(startOfWeek.add(const Duration(days: 6)));
     return Consumer<ExpenseData>(
       builder: (context, value, child) => SizedBox(
         height: 200,
         child: MyBarGraph(
-          maxY: 100,
+          maxY: calculateMax(value, monday, tuesday, wednesday, thursday, friday, saturday, sunday),
           monAmount: value.calculateDailyExpenseSummery()[monday] ?? 0,
           tueAmount: value.calculateDailyExpenseSummery()[tuesday] ?? 0,
           wedAmount: value.calculateDailyExpenseSummery()[wednesday] ?? 0,
